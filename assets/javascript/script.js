@@ -1,29 +1,29 @@
 // I need to make sure the code isnt running until after
 // the browser is fully loaded and to do so I will need to make sure the 
 // code is wrapped with the DOM that calls the Jquery
-const localeSettings = {}
+const localeSettings = {};
 dayjs.locale(localeSettings);
 
 // Code to be executed once DOM is loaded
-$(function () {
+$(function() {
 
-//Dayjs has current hour of the day
-const currentHour = dayjs().format('H');
+    //Dayjs has current hour of the day
+    const currentHour = dayjs().format('H');
+    
+    // The colors for past present and future to be changed
+    // once the current hour changes
+    function hourlyColor() {
+        $('.time-block').each(function() {
+            const blockHour = parseInt(this.id);
+            $(this).toggleClass('past', blockHour < currentHour);
+            $(this).toggleClass('present', blockHour === currentHour);
+            $(this).toggleClass('future', blockHour > currentHour);
+        });
+    }
 
-// The colors for past present and future to be changed
-// once the current hour changes
-function hourlyColor() {
-    $('.time-block').each(function() {
-        const blockHour = parseInt(this.ID);
-        $(this).toggleClass('past', blockHour < currentHour);
-        $(this).toggleClass('present', blockHour === currentHour);
-        $(this).toggleClass('future', blockHour > currentHour);
-    });
-}
-
-// Upon clicking the save btn the users text input will be saved to the local storage
+    // Upon clicking the save btn the users text input will be saved to the local storage
 function textEntry() {
-    $('.savebtn').on('click', function() {
+    $('.Btn').on('click', function() {
         const key = $(this).parent().attr('id');
         const value = $(this).siblings('.description').val();
         localStorage.setItem(key, value);
@@ -38,11 +38,11 @@ function refreshColor() {
     $('.time-block').each(function() {
         const blockHour = parseInt (this.id);
     if (blockHour == currentHour) {
-        $(this).removeClass('past future').addClass('present');
+        $(this).removeClass('past, future').addClass('present');
     }else if (blockHour < currentHour) {
-        $(this).removeClass('future present').addClass ('past');
+        $(this).removeClass('future, present').addClass ('past');
     }else {
-        $(this).removeClass('past present').addClass('future');
+        $(this).removeClass('past, present').addClass('future');
     }
     });
 }
@@ -58,12 +58,14 @@ $('.time-block').each(function() {
 function updateTime() {
     const dateElement = $('#date');
     const timeElement = $('#time');
-    const currentDate = dayjs().format('MMMM D, YYYY');
-    const currentTime = dayjs().format('HH:MM:SS A');
+    const currentDate = dayjs().format('dddd, MMMM D, YYYY');
+//Needed to add lowercase to mm and ss because based in dayjs 
+// uppercase MM is for the current date
+// lowercase mm and ss is for the current minutes and seconds   
+    const currentTime = dayjs().format('hh:mm:ss A');
     dateElement.text(currentDate);
     timeElement.text(currentTime);
-    
-    }
+}
 
 // Calling time, text and refresh
 hourlyColor();
